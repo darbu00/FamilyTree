@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Welcome</title>
+  </head>
+
+  <body>
+    <p>Welcome to your Family Tree.</p>
+    <p>Current server time is <span th:text="${date}">Today's date</span></p>
+    <a th:href="@{/familytree/persons}" class="btn btn-primary btn-sm mb-3">
+      View All People
+    </a>
+  </body>
+</html>

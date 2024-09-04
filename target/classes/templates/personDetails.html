@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <!--link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+      crossorigin="anonymous"
+    /-->
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+
+    <title>Edit Person</title>
+    <script>
+      function personClicked(id) {
+        location.href = "/familytree/personDetails?id=" + id;
+      }
+    </script>
+
+    <script>
+      function addressClicked(address) {
+        <!-- location.href = "https://openstreetmaps.org/search?query=" + address; -->
+        location.href = "https://www.google.com/maps/place/" + address;
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Person Details</h2>
+
+      <form
+        action="#"
+        th:action="@{/familytree/save}"
+        th:object="${person}"
+        method="POST"
+      >
+        <!-- Add hidden form field to handle update -->
+        <input type="hidden" th:field="${person.id}" />
+
+        <div class="container">
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Last Name</th>
+                <th>Generation</th>
+                <th>Married Name</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td th:text="${person.firstName}" />
+                <td th:text="${person.middleName}" />
+                <td th:text="${person.lastName}" />
+                <td th:text="${person.generation}" />
+                <td th:text="${person.marriedName}" />
+              </tr>
+              <tr
+                th:address="${currentLocation.locationAddress1} + ' ' + ${currentLocation.locationCity} + ' ' + ${currentLocation.locationCounty} + ' ' 
+                  + ${currentLocation.locationState} + ' ' + ${currentLocation.locationCountryName}"
+                onclick="addressClicked(this.getAttribute('address'))"
+                th:unless="${currentLocation.id == 0}"
+              >
+                <td
+                  align="right"
+                  colspan="5"
+                  th:text="( not (${#strings.length(#strings.trim(currentLocation.locationAddress1))} < 1)? ${currentLocation.locationAddress1} + ', ' : '') +
+                  ( not (${#strings.length(#strings.trim(currentLocation.locationCity))} < 1)? ${currentLocation.locationCity} + ', ' : '') +
+                  ( not (${#strings.length(#strings.trim(currentLocation.locationCounty))} < 1)? ${currentLocation.locationCounty} + ', ' : '') +
+                  ( not (${#strings.length(#strings.trim(currentLocation.locationState))} < 1)? ${currentLocation.locationState} + ', ' : '') +
+                  ( not (${#strings.length(#strings.trim(currentLocation.locationCountryName))} < 1)? ${currentLocation.locationCountryName} : '')"
+                />
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Print birth information if it is available -->
+        <div
+          class="container"
+          th:object="${birth}"
+          th:unless="${birth.birthYear == 0} or ${birth.birthYear == null}"
+        >
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>Birth Year</th>
+                <th>Birth Month</th>
+                <th>Birth Day</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td th:text="${birth.birthYear}" />
+                <td th:text="${birth.birthMonth}" />
+                <td th:text="${birth.birthDay}" />
+              </tr>
+              <tr
+                th:address="${birthLocation.locationAddress1} + ' ' + ${birthLocation.locationCity} + ' ' + ${birthLocation.locationCounty} + ' ' 
+                  + ${birthLocation.locationState} + ' ' + ${birthLocation.locationCountryName}"
+                onclick="addressClicked(this.getAttribute('address'))"
+                th:unless="${birthLocation.id == 0 or birthLocation == null}"
+              >
+                <td
+                  align="right"
+                  colspan="3"
+                  th:text="( not (${#strings.length(#strings.trim(birthLocation.locationAddress1))} < 1)? ${birthLocation.locationAddress1} + ', ' : '') +
+                  ( not (${#strings.length(#strings.trim(birthLocation.locationCity))} < 1)? ${birthLocation.locationCity} + ', ' : '') +
+                  ( not (${#strings.length(#strings.trim(birthLocation.locationCounty))} < 1)? ${birthLocation.locationCounty} + ', ' : '') +
+                  ( not (${#strings.length(#strings.trim(birthLocation.locationState))} < 1)? ${birthLocation.locationState} + ', ' : '') +
+                  ( not (${#strings.length(#strings.trim(birthLocation.locationCountryName))} < 1)? ${birthLocation.locationCountryName} : '')"
+                />
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Print death information if it is available -->
+        <div
+          class="container"
+          th:object="${death}"
+          th:unless="${death.deathYear == 0} or ${death.deathYear == null}"
+        >
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>Death Year</th>
+                <th>Death Month</th>
+                <th>Death Day</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td th:text="${death.deathYear}" />
+                <td th:text="${death.deathMonth}" />
+                <td th:text="${death.deathDay}" />
+              </tr>
+              <tr
+                th:address="${deathLocation.locationAddress1} + ' ' + ${deathLocation.locationCity} + ' ' + ${deathLocation.locationCounty} + ' ' 
+                  + ${deathLocation.locationState} + ' ' + ${deathLocation.locationCountryName}"
+                onclick="addressClicked(this.getAttribute('address'))"
+                th:unless="${deathLocation.id == 0}"
+              >
+                <td
+                  align="right"
+                  colspan="3"
+                  th:text="( not (${#strings.length(#strings.trim(deathLocation.locationAddress1))} < 1)? ${deathLocation.locationAddress1} + ', ' : '') +
+                  ( not (${#strings.length(#strings.trim(deathLocation.locationCity))} < 1)? ${deathLocation.locationCity} + ', ' : '') +
+                  ( not (${#strings.length(#strings.trim(deathLocation.locationCounty))} < 1)? ${deathLocation.locationCounty} + ', ' : '') +
+                  ( not (${#strings.length(#strings.trim(deathLocation.locationState))} < 1)? ${deathLocation.locationState} + ', ' : '') +
+                  ( not (${#strings.length(#strings.trim(deathLocation.locationCountryName))} < 1)? ${deathLocation.locationCountryName} : '')"
+                />
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Display parent information if it is available -->
+        <div
+          class="container"
+          th:unless="${father.id <= 0} and ${mother.id <= 0}"
+        >
+          <h4>Parents</h4>
+
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Last Name</th>
+                <th>Generation</th>
+                <th>Married Name</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr
+                th:id="${father.id}"
+                onclick="personClicked(this.getAttribute('id'))"
+              >
+                <td th:text="${father.firstName}" />
+                <td th:text="${father.middleName}" />
+                <td th:text="${father.lastName}" />
+                <td th:text="${father.generation}" />
+                <td th:text="${father.marriedName}" />
+              </tr>
+              <tr
+                th:id="${mother.id}"
+                onclick="personClicked(this.getAttribute('id'))"
+              >
+                <td th:text="${mother.firstName}" />
+                <td th:text="${mother.middleName}" />
+                <td th:text="${mother.lastName}" />
+                <td th:text="${mother.generation}" />
+                <td th:text="${mother.marriedName}" />
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- End display parents -->
+
+        <!-- Display Siblings -->
+        <div class="container" th:unless="${siblings.size() == 0}">
+          <h4>Siblings</h4>
+
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Last Name</th>
+                <th>Generation</th>
+                <th>Married Name</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr
+                th:each="sibling : ${siblings}"
+                th:id="${sibling.id}"
+                onclick="personClicked(this.getAttribute('id'))"
+              >
+                <td th:text="${sibling.firstName}" />
+                <td th:text="${sibling.middleName}" />
+                <td th:text="${sibling.lastName}" />
+                <td th:text="${sibling.generation}" />
+                <td th:text="${sibling.marriedName}" />
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- End display siblings -->
+
+        <!-- Display Spouses, if any -->
+        <div class="container" th:unless="${spouses.size() == 0}">
+          <h4>Spouses</h4>
+
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Last Name</th>
+                <th>Generation</th>
+                <th>Married Name</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr
+                th:each="spouse : ${spouses}"
+                th:id="${spouse.id}"
+                onclick="personClicked(this.getAttribute('id'))"
+              >
+                <td th:text="${spouse.firstName}" />
+                <td th:text="${spouse.middleName}" />
+                <td th:text="${spouse.lastName}" />
+                <td th:text="${spouse.generation}" />
+                <td th:text="${spouse.marriedName}" />
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- End display spouses -->
+
+        <!-- Display children, if any -->
+        <div class="container" th:unless="${children.size() == 0}">
+          <h4>Children</h4>
+
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Last Name</th>
+                <th>Generation</th>
+                <th>Married Name</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr
+                th:each="child : ${children}"
+                th:id="${child.id}"
+                onclick="personClicked(this.getAttribute('id'))"
+              >
+                <td th:text="${child.firstName}" />
+                <td th:text="${child.middleName}" />
+                <td th:text="${child.lastName}" />
+                <td th:text="${child.generation}" />
+                <td th:text="${child.marriedName}" />
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- End display children -->
+
+        <button type="submit" class="btn btn-info col-2">Save</button>
+      </form>
+
+      <a th:href="@{/familytree/persons}">Back to Person List</a>
+    </div>
+  </body>
+</html>
