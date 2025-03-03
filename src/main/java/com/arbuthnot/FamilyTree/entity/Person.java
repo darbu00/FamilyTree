@@ -1,15 +1,16 @@
 package com.arbuthnot.FamilyTree.entity;
 
+import com.arbuthnot.FamilyTree.dao.PersonDAOImpl;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -36,18 +37,14 @@ public class Person {
   private String nickName;
   @Column(name = "gender")
   private String gender;
-  @JoinColumn(name = "father_id")
-  @OneToOne(targetEntity = Person.class, fetch = FetchType.EAGER)
+  @Transient
   private Person father;
-  // @Column(name = "father")
+  @Column(name = "father_id")
+  private Integer fatherId;
   @Transient
-  private Integer personFatherId;
-  @JoinColumn(name = "mother_id")
-  @OneToOne(targetEntity = Person.class, fetch = FetchType.EAGER)
   private Person mother;
-  // @Column(name = "mother")
-  @Transient
-  private Integer personMotherId;
+  @Column(name = "mother_id")
+  private Integer motherId;
   @JoinColumn(name = "current_location_id", referencedColumnName = "id")
   @ManyToOne(targetEntity = Location.class, fetch = FetchType.EAGER)
   private Location currentLocation;
@@ -85,8 +82,8 @@ public class Person {
     this.marriedName = marriedName;
     this.nickName = nickName;
     this.gender = gender;
-    this.personFatherId = fatherId;
-    this.personMotherId = motherId;
+    this.fatherId = fatherId;
+    this.motherId = motherId;
     this.personCurrentLocationId = currentLocationId;
     this.personBirthId = birthId;
     this.personDeathId = deathId;
@@ -159,28 +156,20 @@ public class Person {
     this.gender = gender;
   }
 
-  public Integer getPersonFatherId() {
-    if (this.father != null) {
-      return father.getId();
-    } else {
-      return 0;
-    }
+  public Integer getFatherId() {
+    return fatherId;
   }
 
-  public void setPersonFatherId(Integer father) {
-    this.personFatherId = father;
+  public void setFatherId(Integer father) {
+    this.fatherId = father;
   }
 
-  public Integer getPersonMotherId() {
-    if (this.mother != null) {
-      return mother.getId();
-    } else {
-      return 0;
-    }
+  public Integer getMotherId() {
+    return motherId;
   }
 
-  public void setPersonMotherId(Integer motherId) {
-    this.personMotherId = motherId;
+  public void setMotherId(Integer motherId) {
+    this.motherId = motherId;
   }
 
   public Integer getPersonCurrentLocationId() {
@@ -229,16 +218,29 @@ public class Person {
     this.personNotes = personNotes;
   }
 
-  public Person getFather() {
-    return father;
+  public Person getFather(EntityManager entityManager) {
+    if (fatherId > 0 && father == null) {
+      return father = new PersonDAOImpl(entityManager).findEntityById(fatherId);
+    } else if (father != null) {
+      return father;
+    } else {
+      return father = new Person();
+    }
   }
 
   public void setFather(Person father) {
     this.father = father;
   }
 
-  public Person getMother() {
-    return mother;
+  public Person getMother(EntityManager entityManager) {
+    if (motherId > 0 && mother == null) {
+      return mother = new PersonDAOImpl(entityManager).findEntityById(motherId);
+    } else if (mother != null) {
+      return mother;
+    } else {
+      return mother = new Person();
+    }
+
   }
 
   public void setMother(Person mother) {

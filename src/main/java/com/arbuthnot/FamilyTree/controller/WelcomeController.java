@@ -22,6 +22,7 @@ import com.arbuthnot.FamilyTree.entity.Location;
 import com.arbuthnot.FamilyTree.entity.Marriage;
 //import com.arbuthnot.FamilyTree.dao.PersonRepository;
 import com.arbuthnot.FamilyTree.entity.Person;
+import com.arbuthnot.FamilyTree.utils.ListUtils;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Tuple;
@@ -46,7 +47,7 @@ public class WelcomeController {
     people = new PersonDAOImpl(entityManager).getEntityList();
     // System.out.println("The size of people is : " + people.size());
     model.addAttribute("people", people);
-    return "personsNew";
+    return "persons";
   }
 
   @GetMapping("/test")
@@ -61,10 +62,8 @@ public class WelcomeController {
   @GetMapping("/personDetails")
   public String personDetails(@RequestParam("id") Integer id, Model model) {
     Person person = new PersonDAOImpl(entityManager).findEntityById(id);
-    Person father = person.getFather();
-    System.out.println("Father : " + father);
-    Person mother = person.getMother();
-    System.out.println("Mother : " + mother);
+    Person father = person.getFather(entityManager);
+    Person mother = person.getMother(entityManager);
     Birth birth = person.getBirth();
     Death death = person.getDeath();
     List<List<?>> marriagesSpouses = new ArrayList<List<?>>();
@@ -129,9 +128,7 @@ public class WelcomeController {
           marriages.add((Marriage) marriagesSpouses.get(i).get(j));
           spouses.add((Person) marriagesSpouses.get(i + 1).get(j));
         }
-
       }
-
     }
 
     // Look for siblings
@@ -140,9 +137,11 @@ public class WelcomeController {
         siblings = new PersonDAOImpl(entityManager).getSiblings(person.getId(), father.getId(), mother.getId());
       }
     }
+    siblings = new ListUtils().sortPeopleByYearBirthAsc(siblings);
 
     // Look for children
     children = new PersonDAOImpl(entityManager).findChildrenByParentId(person.getId());
+    children = new ListUtils().sortPeopleByYearBirthAsc(children);
 
     currentLocation = person.getCurrentLocation();
     if (person.getCurrentLocation() != null) {
