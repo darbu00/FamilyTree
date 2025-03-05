@@ -23,7 +23,7 @@ public class TestDAOImpl implements EntityDAO {
   }
 
   @Override
-  public void saveEntity(Object object) {
+  public Object saveEntity(Object object) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'saveEntity'");
   }
@@ -41,7 +41,7 @@ public class TestDAOImpl implements EntityDAO {
   }
 
   @Override
-  public void updateEntity(Object object) {
+  public Object updateEntity(Object object) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'updateEntity'");
   }

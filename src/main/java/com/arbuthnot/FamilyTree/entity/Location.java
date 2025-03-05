@@ -1,5 +1,8 @@
 package com.arbuthnot.FamilyTree.entity;
 
+import org.hibernate.annotations.Cascade;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -55,7 +58,8 @@ public class Location {
     this.setLocationStateShort("");
     this.setLocationZip("");
     this.setLocationCountryId(0);
-
+    this.setLocationCountryName("");
+    this.setLocationCountry(new Country());
   }
 
   // Getters and Setters
@@ -135,12 +139,16 @@ public class Location {
     return locationCountryId;
   }
 
-  public void setLocationCountryId(Integer locationCountry) {
-    this.locationCountryId = locationCountry;
+  public void setLocationCountryId(Integer locationCountryId) {
+    this.locationCountryId = locationCountryId;
   }
 
   public String getLocationCountryName() {
-    return locationCountry.getCountryName();
+    if (locationCountry != null) {
+      return locationCountry.getCountryName();
+    } else {
+      return "";
+    }
   }
 
   public void setLocationCountryName(String locationCountryName) {
@@ -148,11 +156,86 @@ public class Location {
   }
 
   public Country getLocationCountry() {
+    if (this.locationCountry != null) {
+      setLocationCountryId(this.locationCountry.getId());
+      setLocationCountryName(this.locationCountry.getCountryName());
+    }
     return locationCountry;
   }
 
   public void setLocationCountry(Country locationCountry) {
     this.locationCountry = locationCountry;
+  }
+
+  @Override
+  public String toString() {
+    return "Location [id=" + id + ", locationName=" + locationName + ", locationAddress1=" + locationAddress1
+        + ", locationAddress2=" + locationAddress2 + ", locationCity=" + locationCity + ", locationCounty="
+        + locationCounty + ", locationState=" + locationState + ", locationStateShort=" + locationStateShort
+        + ", locationZip=" + locationZip + ", locationCountry=" + locationCountry + ", locationCountryId="
+        + locationCountryId + ", locationCountryName="
+        + locationCountryName + "]";
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((locationName == null) ? 0 : locationName.hashCode());
+    result = prime * result + ((locationAddress1 == null) ? 0 : locationAddress1.hashCode());
+    result = prime * result + ((locationAddress2 == null) ? 0 : locationAddress2.hashCode());
+    result = prime * result + ((locationCity == null) ? 0 : locationCity.hashCode());
+    result = prime * result + ((locationCounty == null) ? 0 : locationCounty.hashCode());
+    result = prime * result + ((locationState == null) ? 0 : locationState.hashCode());
+    result = prime * result + ((locationZip == null) ? 0 : locationZip.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Location other = (Location) obj;
+    if (locationName == null) {
+      if (other.locationName != null)
+        return false;
+    } else if (!locationName.equals(other.locationName))
+      return false;
+    if (locationAddress1 == null) {
+      if (other.locationAddress1 != null)
+        return false;
+    } else if (!locationAddress1.equals(other.locationAddress1))
+      return false;
+    if (locationAddress2 == null) {
+      if (other.locationAddress2 != null)
+        return false;
+    } else if (!locationAddress2.equals(other.locationAddress2))
+      return false;
+    if (locationCity == null) {
+      if (other.locationCity != null)
+        return false;
+    } else if (!locationCity.equals(other.locationCity))
+      return false;
+    if (locationCounty == null) {
+      if (other.locationCounty != null)
+        return false;
+    } else if (!locationCounty.equals(other.locationCounty))
+      return false;
+    if (locationState == null) {
+      if (other.locationState != null)
+        return false;
+    } else if (!locationState.equals(other.locationState))
+      return false;
+    if (locationZip == null) {
+      if (other.locationZip != null)
+        return false;
+    } else if (!locationZip.equals(other.locationZip))
+      return false;
+    return true;
   }
 
 }

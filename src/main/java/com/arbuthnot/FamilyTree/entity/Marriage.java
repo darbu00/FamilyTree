@@ -1,5 +1,7 @@
 package com.arbuthnot.FamilyTree.entity;
 
+import java.util.ArrayList;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -35,10 +37,15 @@ public class Marriage {
   private String marriageNotes;
   @Column(name = "marriage_status")
   private String marriageStatus;
+  @Transient
+  PersonMarriage personMarriage;
 
   // Constructors
   public Marriage() {
-
+    // this.marriageYear = 0;
+    // this.marriageMonth = 0;
+    // this.marriageDay = 0;
+    this.marriageLocation = new Location();
   }
 
   // Getters and Setters
@@ -104,6 +111,25 @@ public class Marriage {
 
   public void setMarriageLocation(Location marriageLocation) {
     this.marriageLocation = marriageLocation;
+  }
+
+  public PersonMarriage getPersonMarriage() {
+    return personMarriage;
+  }
+
+  public void setPersonMarriage(PersonMarriage personMarriage) {
+    this.personMarriage = personMarriage;
+  }
+
+  @Override
+  public String toString() {
+    return "Marriage [id=" + id + ", marriageYear=" + marriageYear + ", marriageMonth=" + marriageMonth
+        + ", marriageDay=" + marriageDay + ", marriageLocation=" + marriageLocation + ", marriageLocationId="
+        + marriageLocationId + ", marriageStatus=" + marriageStatus + ", personMarriage=" + personMarriage + "]";
+  }
+
+  public void addSpouseIdToPersonMarriage(int id) {
+    this.personMarriage.setSpouse1Id(id);
   }
 
 }

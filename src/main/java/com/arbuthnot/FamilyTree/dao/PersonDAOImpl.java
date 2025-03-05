@@ -2,21 +2,21 @@ package com.arbuthnot.FamilyTree.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.hibernate.query.sql.spi.NativeSelectQueryDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import com.arbuthnot.FamilyTree.entity.Location;
 import com.arbuthnot.FamilyTree.entity.Person;
 
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 
 @Repository
-public class PersonDAOImpl implements EntityDAO {
-
+// @Primary
+public class PersonDAOImpl implements EntityDAO<Person> {
   private EntityManager entityManager;
 
   @Autowired
@@ -32,19 +32,25 @@ public class PersonDAOImpl implements EntityDAO {
 
   @Override
   @Transactional
-  public void saveEntity(Object person) {
+  public Person saveEntity(Person person) {
     if (person instanceof Person) {
-      entityManager.persist(person);
+      return entityManager.merge(person);
+    } else {
+      return null;
     }
   }
 
   @Override
   public Person findEntityById(Integer id) {
-    return entityManager.find(Person.class, id);
+    if (id != null) {
+      return entityManager.find(Person.class, id);
+    } else {
+      return null;
+    }
   }
 
   @Override
-  public void updateEntity(Object object) {
+  public Person updateEntity(Person object) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'updateEntity'");
   }
@@ -56,8 +62,6 @@ public class PersonDAOImpl implements EntityDAO {
 
     // getPeople.setParameter("columnName", column);
     getPeople.setParameter("columnValue", value);
-
-    // System.out.println(getPeople.toString());
 
     return getPeople.getResultList();
   }
@@ -72,7 +76,6 @@ public class PersonDAOImpl implements EntityDAO {
       getPeople.setParameter("id", father);
       for (Object p : getPeople.getResultList()) {
         if (((Person) p).getId() != child) {
-          // System.out.println("..... Adding sibling due to father relationship .....");
           siblings.add((Person) p);
         }
       }
@@ -114,6 +117,17 @@ public class PersonDAOImpl implements EntityDAO {
       children.add((Person) p);
     }
     return children;
+  }
+
+  @Transactional
+  public boolean addPerson(Person person) {
+    boolean saved = false;
+
+    if (person instanceof Person) {
+      entityManager.refresh(person);
+      entityManager.persist(person);
+    }
+    return saved;
   }
 
 }

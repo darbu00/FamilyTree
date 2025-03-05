@@ -25,7 +25,7 @@ public class Country {
   @Column(name = "country_subregion")
   private String countrySubRegion;
   @Column(name = "country_intermediate_region")
-  private String countryIntegerermediateRegion;
+  private String countryIntermediateRegion;
 
   // Constructor
   public Country() {
@@ -73,12 +73,17 @@ public class Country {
     this.countrySubRegion = countrySubRegion;
   }
 
-  public String getCountryIntegerermediateRegion() {
-    return countryIntegerermediateRegion;
+  public String getCountryIntermediateRegion() {
+    return countryIntermediateRegion;
   }
 
-  public void setCountryIntegerermediateRegion(String countryIntegerermediateRegion) {
-    this.countryIntegerermediateRegion = countryIntegerermediateRegion;
+  public void setCountryIntermediateRegion(String countryIntegerermediateRegion) {
+    this.countryIntermediateRegion = countryIntegerermediateRegion;
+  }
+
+  @Override
+  public String toString() {
+    return "Country [id=" + id + ", countryName=" + countryName + ", countryShortName=" + countryShortName + "]";
   }
 
 }

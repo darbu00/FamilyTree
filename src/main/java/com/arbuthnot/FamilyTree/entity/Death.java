@@ -39,13 +39,14 @@ public class Death {
   private Integer deathAccurate;
 
   public Death() {
-    this.setId(0);
-    this.setDeathYear(0);
-    this.setDeathMonth(0);
-    this.setDeathDay(0);
-    this.setDeathLocationId(0);
-    this.setDeathNotes("");
-    this.setDeathAccurate(0);
+    // this.setId(0);
+    // this.setDeathYear(0);
+    // this.setDeathMonth(0);
+    // this.setDeathDay(0);
+    // this.setDeathLocationId(0);
+    // this.setDeathNotes("");
+    // this.setDeathAccurate(0);
+    this.setDeathLocation(new Location());
   }
 
   // Getters and Setters
@@ -119,6 +120,19 @@ public class Death {
 
   public void setDeathLocation(Location deathLocation) {
     this.deathLocation = deathLocation;
+  }
+
+  public void saveDeathLocationId(int deathLocationId) {
+    if (deathLocationId != 0) {
+      this.deathLocation.setId(deathLocationId);
+    }
+  }
+
+  @Override
+  public String toString() {
+    return "Death [id=" + id + ", deathYear=" + deathYear + ", deathMonth=" + deathMonth + ", deathDay=" + deathDay
+        + ", deathLocation=" + deathLocation + ", deathLocationId=" + deathLocationId + ", deathAccurate="
+        + deathAccurate + "]";
   }
 
 }

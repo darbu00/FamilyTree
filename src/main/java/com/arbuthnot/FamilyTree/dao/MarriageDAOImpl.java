@@ -17,7 +17,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 @Repository
-public class MarriageDAOImpl implements EntityDAO {
+public class MarriageDAOImpl implements EntityDAO<Marriage> {
 
   private EntityManager entityManager;
 
@@ -48,16 +48,18 @@ public class MarriageDAOImpl implements EntityDAO {
 
   @Override
   @Transactional
-  public void saveEntity(Object object) {
-    if (object instanceof Marriage) {
-      entityManager.persist(object);
+  public Marriage saveEntity(Marriage marriage) {
+    if (marriage instanceof Marriage) {
+      return entityManager.merge(marriage);
+    } else {
+      return new Marriage();
     }
   }
 
   @Override
-  public void updateEntity(Object object) {
+  public Marriage updateEntity(Marriage object) {
     // TODO Auto-generated method stub
-
+    return new Marriage();
   }
 
   @Override

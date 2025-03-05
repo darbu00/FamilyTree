@@ -3,16 +3,26 @@ package com.arbuthnot.FamilyTree.dao;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.arbuthnot.FamilyTree.entity.Country;
 import com.arbuthnot.FamilyTree.entity.Location;
 
 import jakarta.persistence.EntityManager;
+//import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-import jakarta.transaction.Transactional;
+//import jakarta.transaction.Transactional;
 
-public class LocationDAOImpl implements EntityDAO {
-
+@Repository
+public class LocationDAOImpl implements EntityDAO<Location> {
+  // @PersistenceContext
   private EntityManager entityManager;
 
+  @Autowired
+  private CountryDAOImpl countryDao;
+
+  @Autowired
   public LocationDAOImpl(EntityManager entityManager) {
     this.entityManager = entityManager;
   }
@@ -30,21 +40,24 @@ public class LocationDAOImpl implements EntityDAO {
   }
 
   @Override
-  @Transactional
-  public void saveEntity(Object object) {
-    if (object instanceof Location) {
-      entityManager.persist(object);
+  // @Transactional
+  public Location saveEntity(Location location) {
+    if (location instanceof Location) {
+      Location savedLocation = entityManager.merge(location);
+      return savedLocation;
+    } else {
+      return null;
     }
   }
 
   @Override
-  public void updateEntity(Object object) {
-    // TODO Auto-generated method stub
-
+  // @Transactional
+  public Location updateEntity(Location location) {
+    return entityManager.merge(location);
   }
 
   @Override
-  public List<?> getEntityByColumn(String column, String columnValue) {
+  public List<Location> getEntityByColumn(String column, String columnValue) {
     // TODO Auto-generated method stub
     return null;
   }

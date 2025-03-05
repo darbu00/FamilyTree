@@ -7,16 +7,16 @@ import org.springframework.stereotype.Repository;
 import jakarta.transaction.Transactional;
 
 //@Repository
-public interface EntityDAO {
+public interface EntityDAO<T> {
 
   @Transactional
-  void saveEntity(Object object);
+  T saveEntity(T object);
 
-  Object findEntityById(Integer id);
+  T findEntityById(Integer id);
 
-  List<?> getEntityList();
+  List<T> getEntityList();
 
-  void updateEntity(Object object);
+  T updateEntity(T object);
 
-  List<?> getEntityByColumn(String column, String columnValue);
+  List<T> getEntityByColumn(String column, String columnValue);
 }

@@ -37,13 +37,14 @@ public class Birth {
   private Integer birthAccurate;
 
   public Birth() {
-    this.setId(0);
-    this.setBirthYear(0);
-    this.setBirthMonth(0);
-    this.setBirthDay(0);
-    this.setBirthLocationId(0);
-    this.setBirthNotes("");
-    this.setBirthAccurate(0);
+    // this.setId(0);
+    // this.setBirthYear(0);
+    // this.setBirthMonth(0);
+    // this.setBirthDay(0);
+    // this.setBirthLocationId(0);
+    // this.setBirthNotes("");
+    // this.setBirthAccurate(0);
+    this.setBirthLocation(new Location());
   }
 
   // Getters and Setters
@@ -117,6 +118,19 @@ public class Birth {
 
   public void setBirthLocation(Location birthLocation) {
     this.birthLocation = birthLocation;
+  }
+
+  public void saveBirthLocationId(int birthLocationId) {
+    if (birthLocationId != 0) {
+      this.birthLocation.setId(birthLocationId);
+    }
+  }
+
+  @Override
+  public String toString() {
+    return "Birth [id=" + id + ", birthYear=" + birthYear + ", birthMonth=" + birthMonth + ", birthDay=" + birthDay
+        + ", birthLocation=" + birthLocation + ", birthLocationId=" + birthLocationId + ", birthAccurate="
+        + birthAccurate + "]";
   }
 
 }

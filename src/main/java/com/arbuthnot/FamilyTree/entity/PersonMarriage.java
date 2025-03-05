@@ -12,10 +12,11 @@ public class PersonMarriage {
   @Column(name = "marriage_id")
   private Integer marriageId;
   //
-  //
+  @Id
   @Column(name = "spouse1_id")
   private Integer spouse1Id;
 
+  @Id
   @Column(name = "spouse2_id")
   private Integer spouse2Id;
 
@@ -41,6 +42,11 @@ public class PersonMarriage {
 
   public void setSpouse2Id(Integer spouse2Id) {
     this.spouse2Id = spouse2Id;
+  }
+
+  @Override
+  public String toString() {
+    return "PersonMarriage [marriageId=" + marriageId + ", spouse1Id=" + spouse1Id + ", spouse2Id=" + spouse2Id + "]";
   }
 
 }

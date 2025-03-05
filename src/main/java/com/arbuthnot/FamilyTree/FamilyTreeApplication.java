@@ -9,7 +9,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.arbuthnot.FamilyTree.dao.EntityDAO;
+import com.arbuthnot.FamilyTree.dao.PersonDAOImpl;
 import com.arbuthnot.FamilyTree.entity.Person;
+import com.arbuthnot.FamilyTree.api.*;
 
 @SpringBootApplication
 public class FamilyTreeApplication {
@@ -20,12 +22,14 @@ public class FamilyTreeApplication {
 
   // @Bean
   // public CommandLineRunner commandLineRunner(PersonDAOImpl personDAO) {
-
+  //
   // return runner -> {
-  // getAllPeople(personDAO);
-  // getAPerson(personDAO);
-  // System.out.println("..... Inside Runner .....");
-  // getPeopleByLastName(personDAO);
+  // new PersonApi().getAllPersonsList();
+  //
+  // // getAllPeople(personDAO);
+  // // getAPerson(personDAO);
+  // // System.out.println("..... Inside Runner .....");
+  // // getPeopleByLastName(personDAO);
   // };
   // }
 

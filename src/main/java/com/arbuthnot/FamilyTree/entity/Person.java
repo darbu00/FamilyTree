@@ -1,5 +1,7 @@
 package com.arbuthnot.FamilyTree.entity;
 
+import java.util.ArrayList;
+
 import com.arbuthnot.FamilyTree.dao.PersonDAOImpl;
 
 import jakarta.persistence.Column;
@@ -39,15 +41,15 @@ public class Person {
   private String gender;
   @Transient
   private Person father;
-  @Column(name = "father_id")
+  @Column(name = "father_id") // 0=tree start, -1=not in DB or not known
   private Integer fatherId;
   @Transient
   private Person mother;
-  @Column(name = "mother_id")
+  @Column(name = "mother_id") // 0=tree start, -1=not in DB or not known
   private Integer motherId;
   @JoinColumn(name = "current_location_id", referencedColumnName = "id")
   @ManyToOne(targetEntity = Location.class, fetch = FetchType.EAGER)
-  private Location currentLocation;
+  private Location currentLocation; // 0=not in DB/unknown
   @Transient
   private Integer personCurrentLocationId;
   @JoinColumn(name = "birth_id", referencedColumnName = "id")
@@ -59,16 +61,28 @@ public class Person {
   @JoinColumn(name = "death_id", referencedColumnName = "id")
   @ManyToOne(targetEntity = Death.class, fetch = FetchType.EAGER)
   private Death death;
-
   // @Column(name = "death_id")
   @Transient
   private Integer personDeathId;
   @Column(name = "notes")
   private String personNotes;
+  @Transient
+  private ArrayList<Marriage> marriages;
 
   // constructors
   public Person() {
-
+    this.firstName = "";
+    this.lastName = "";
+    this.middleName = "";
+    this.generation = "";
+    this.marriedName = "";
+    this.nickName = "";
+    this.fatherId = Integer.valueOf(-1);
+    this.motherId = Integer.valueOf(-1);
+    this.personCurrentLocationId = Integer.valueOf(0);
+    this.personBirthId = Integer.valueOf(0);
+    this.personDeathId = Integer.valueOf(0);
+    this.personNotes = "";
   }
 
   public Person(Integer id, String firstName, String lastName, String middleName, String generation, String marriedName,
@@ -176,6 +190,8 @@ public class Person {
 
     if (this.currentLocation != null) {
       return currentLocation.getId();
+    } else if (personCurrentLocationId != null && personCurrentLocationId != 0) {
+      return personCurrentLocationId;
     } else {
       return 0;
     }
@@ -218,29 +234,16 @@ public class Person {
     this.personNotes = personNotes;
   }
 
-  public Person getFather(EntityManager entityManager) {
-    if (fatherId > 0 && father == null) {
-      return father = new PersonDAOImpl(entityManager).findEntityById(fatherId);
-    } else if (father != null) {
-      return father;
-    } else {
-      return father = new Person();
-    }
+  public Person getFather() {
+    return father;
   }
 
   public void setFather(Person father) {
     this.father = father;
   }
 
-  public Person getMother(EntityManager entityManager) {
-    if (motherId > 0 && mother == null) {
-      return mother = new PersonDAOImpl(entityManager).findEntityById(motherId);
-    } else if (mother != null) {
-      return mother;
-    } else {
-      return mother = new Person();
-    }
-
+  public Person getMother() {
+    return mother;
   }
 
   public void setMother(Person mother) {
@@ -271,14 +274,27 @@ public class Person {
     this.death = death;
   }
 
+  public ArrayList<Marriage> getMarriages() {
+    return marriages;
+  }
+
+  public void setMarriages(ArrayList<Marriage> marriages) {
+    this.marriages = marriages;
+  }
+
+  public void saveCurrentLocationId(int currentLocationId) {
+    if (currentLocationId != 0) {
+      this.currentLocation.setId(currentLocationId);
+    }
+  }
+
   @Override
   public String toString() {
-    return "Person [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", middleName=" + middleName
+    return "Person [id=" + id + ", firstName=" + firstName + ", middleName=" + middleName + ", lastName=" + lastName
         + ", generation=" + generation + ", marriedName=" + marriedName + ", nickName=" + nickName + ", gender="
-        + gender + ", father=" + father + ", mother=" + mother + ", location=" + currentLocation
-        + ", birthId="
-        + birth
-        + ", deathId=" + death + ", personNotes=" + personNotes + "]";
+        + gender + ", fatherId=" + fatherId + ", motherId=" + motherId + ", personCurrentLocationId="
+        + personCurrentLocationId + ", currentLocation=" + currentLocation
+        + ", birth=" + birth + ", death=" + death + ", personNotes=" + personNotes + ", marriages=" + marriages + "]";
   }
 
 }
